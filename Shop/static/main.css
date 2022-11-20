@@ -1,0 +1,77 @@
+
+.bi {
+font-size: 150%;
+}
+section {
+background-color: #282828;
+}
+.btn:hover {
+color: #282828;
+}
+
+.cart-button {
+background-color: #383838;
+border: 1px solid grey;
+color: white;
+}
+.cart-nav {
+background-color: rgba(74,74,74,0.6);
+color: white;
+cursor: pointer;
+}
+.product-row {
+min-height: 60vh;
+}
+.arrow {
+color: white;
+cursor: pointer;
+}
+.product-badge {
+height: 15%;
+}
+.product-col {
+height: 60vh;
+}
+.borders {
+border-left: solid 1px #0C0032;
+border-right: solid 1px #0C0032;
+background-color: #0C0032;
+}
+input {
+color: white;
+}
+.mask {
+display: none;
+}
+.overlay:hover > .mask {
+display: flex;
+}
+.description {
+height: 35%;
+background-color: #383838;
+color: white;
+}
+.add-cart-div {
+background-color: #383838;
+height: 30%;
+}
+.welcome {
+height: 100vh;
+}
+.x {
+background-color: rgba(0, 0, 0, 0.4);
+}
+.page-item, .page-link, .disabled {
+background-color: #282828;
+color: black;
+}
+.page-item.disabled .page-link {
+background-color: #171717;
+color: black;
+}
+.left-border {
+border-left: 2px solid #282828;
+}
+.add-to-favorite-list, .delete-from-favorite-list {
+cursor: pointer;
+}

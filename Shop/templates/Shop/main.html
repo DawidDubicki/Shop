@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    {% include 'Shop/bootstrap.html' %}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Sklep internetowy </title>
+    {% load static %}
+    {% load my_tags %}
+    <link href="{% static 'main.css' %}" rel="stylesheet">
+</head>
+<body>
+    {% include 'Shop/navbar.html' %}
+    <section class="min-vh-100 w-100">
+        <div class="col-12 align-items-center d-flex border-top border-bottom border-secondary mb-2">
+            <a href="{% url 'category_url' 'Klawiatury' %}" class="gaming flex-fill d-flex
+             justify-content-center align-items-center"> <i class="bi bi-keyboard-fill"></i></a>
+            <a href="{% url 'category_url' 'Komputery' %}" class="gaming flex-fill d-flex
+             justify-content-center align-items-center"> <i class="bi bi-pc"></i></a>
+            <a href="{% url 'category_url' 'Myszki' %}" class="gaming flex-fill d-flex
+             justify-content-center align-items-center"> <i class="bi bi-mouse3-fill"></i></a>
+            <a href="{% url 'category_url' 'Monitory' %}" class="gaming flex-fill d-flex
+             justify-content-center align-items-center"> <i class="bi bi-display-fill"></i></a>
+            <a href="{% url 'category_url' 'Słuchawki' %}" class="gaming flex-fill d-flex
+             justify-content-center align-items-center"> <i class="bi bi-headset"></i></a>
+        </div>
+        <div class="col-12 position-relative mb-3 overflow-hidden">
+            <img src="{% static 'Davibg.jpeg' %}" class="welcome w-100">
+            <h1 class="position-absolute x start-50 top-50 d-flex justify-content-center translate-middle
+             p-5 rounded-pill">
+                <span class="font"> Poznaj prawdziwy świat gamingu! </span>
+            </h1>
+        </div>
+        <div class="row product-row position-relative w-100">
+            <div class="col-12 h-100 d-flex flex-nowrap overflow-scroll first no-scroll" id="first-div">
+                {% for item in newest %}
+                    <div class="col-12 col-md-6 col-lg-3 d-flex p-2 flex-column product-col">
+                        <div class="h-50 overlay position-relative">
+                            <img src="{{ item.image.url }}" class="w-100 h-100 img-fluid rounded">
+                                <div class="position-absolute bottom-0 h-25 w-100 mask">
+                                    {% if request.user.is_authenticated %}
+                                    {% if item.id in ids %}
+                                        <a class="justify-content-center
+                                        align-items-center d-flex flex-fill h-100 cart-nav delete-from-favorite-list"
+                                        data-product="{{ item.id }}">
+                                            <i class="bi bi-heart-fill" style="color: red;"> </i>
+                                        </a>
+                                    {% else %}
+                                        <a class="justify-content-center
+                                        align-items-center d-flex flex-fill h-100 cart-nav add-to-favorite-list"
+                                        data-product="{{ item.id }}">
+                                            <i class="bi gaming bi-heart-fill"> </i>
+                                        </a>
+                                    {% endif %}
+                                    {% endif %}
+                                <a href="{% url 'product_url' item.id %}"
+                                class="justify-content-center
+                                align-items-center d-flex flex-fill h-100 cart-nav">
+                                    <i class="gaming bi bi-zoom-in"> </i>
+                                </a>
+                                <a class="justify-content-center
+                                align-items-center d-flex flex-fill h-100 cart-nav cart-add"
+                                data-pack="{{ item.id }}">
+                                    <i class="gaming bi bi-cart-plus"> </i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="h-50">
+                            <div class="description d-flex justify-content-center p-1 align-items-center">
+                                <h4 class="text-align-center"> {{ item.title }} </h4>
+                            </div>
+                            <div class="p-0 description p-1 d-flex align-items-center justify-content-center ">
+                                {{ item.price|currency }}
+                            </div>
+                            <div class="add-cart-div d-flex flex-lg-row flex-column align-items-center justify-content-center">
+                                <div class="col-12 h-100 align-self-end">
+                                    <button class="justify-content-center cart-button
+                                    align-items-center d-flex w-100 h-100 cart-add"
+                                    data-pack="{{ item.id }}">
+                                        Dodaj do koszyka
+                                        &nbsp <i class="bi bi-cart-plus"> </i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="col-2 h-100 end-0 position-absolute d-flex justify-content-center align-items-center">
+                <h1 class="d-flex justify-content-center" onclick="scrollForward('first-div')"> <i class="bi bi-chevron-double-right font arrow" id="first">
+                </i> </h1>
+            </div>
+            <div class="col-2 h-100 start-0 position-absolute d-flex justify-content-center align-items-center">
+                <h1 class="d-flex justify-content-center" onclick="scrollBackward('first-div')"> <i class="bi bi-chevron-double-left font arrow" id="first">
+                </i> </h1>
+            </div>
+        </div>
+
+
+<!-- 2nd picture -->
+        <div class="col-12 position-relative mb-3 overflow-hidden">
+            <img src="{% static 'headphones_bg2.jpeg' %}" class="welcome w-100">
+            <h1 class="position-absolute x start-50 top-50 d-flex justify-content-end translate-middle
+             p-5 rounded-pill">
+                <span class="font"> Doświadcz najwyższej jakości! </span>
+            </h1>
+        </div>
+        <div class="row product-row position-relative w-100">
+            <div class="col-12 h-100 d-flex flex-nowrap overflow-scroll no-scroll" id="second-div">
+                {% for item in best_selling_products %}
+                    <div class="col-12 col-md-6 col-lg-3 d-flex p-2 flex-column product-col">
+                        <div class="h-50 overlay position-relative">
+                            <img src="{{ item.image.url }}" class="w-100 h-100 img-fluid rounded">
+                                <div class="position-absolute bottom-0 h-25 w-100 mask">
+                                    {% if request.user.is_authenticated %}
+                                    {% if item.id in ids %}
+                                        <a class="justify-content-center
+                                        align-items-center d-flex flex-fill h-100 cart-nav delete-from-favorite-list"
+                                        data-product="{{ item.id }}">
+                                            <i class="bi bi-heart-fill" style="color: red;"> </i>
+                                        </a>
+                                    {% else %}
+                                        <a class="justify-content-center
+                                        align-items-center d-flex flex-fill h-100 cart-nav add-to-favorite-list"
+                                        data-product="{{ item.id }}">
+                                            <i class="bi gaming bi-heart-fill"> </i>
+                                        </a>
+                                    {% endif %}
+                                    {% endif %}
+                                <a href="{% url 'product_url' item.id %}"
+                                class="justify-content-center
+                                align-items-center d-flex flex-fill h-100 cart-nav">
+                                    <i class="gaming bi bi-zoom-in"> </i>
+                                </a>
+                                <a class="justify-content-center
+                                align-items-center d-flex flex-fill h-100 cart-nav cart-add"
+                                data-pack="{{ item.id }}">
+                                    <i class="gaming bi bi-cart-plus"> </i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="h-50">
+                            <div class="description d-flex justify-content-center p-1 align-items-center">
+                                <h4 class="text-align-center"> {{ item.title }} </h4>
+                            </div>
+                            <div class="p-0 description p-1 d-flex align-items-center justify-content-center ">
+                                {{ item.price|currency }}
+                            </div>
+                            <div class="add-cart-div d-flex flex-lg-row flex-column align-items-center justify-content-center">
+                                <div class="col-12 h-100 align-self-end">
+                                    <button class="justify-content-center cart-button
+                                    align-items-center d-flex w-100 h-100 cart-add"
+                                    data-pack="{{ item.id }}">
+                                        Dodaj do koszyka
+                                        &nbsp <i class="bi bi-cart-plus"> </i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="col-2 h-100 end-0 position-absolute d-flex justify-content-center align-items-center">
+                <h1 class="d-flex justify-content-center" onclick="scrollForward('second-div')"> <i class="bi bi-chevron-double-right font arrow" id="first">
+                </i> </h1>
+            </div>
+            <div class="col-2 h-100 start-0 position-absolute d-flex justify-content-center align-items-center">
+                <h1 class="d-flex justify-content-center" onclick="scrollBackward('second-div')"> <i class="bi bi-chevron-double-left font arrow" id="first">
+                </i> </h1>
+            </div>
+        </div>
+<!-- 3rd picture -->
+        <div class="col-12 position-relative mb-3 overflow-hidden">
+            <img src="{% static 'testtt.jpeg' %}" class="welcome w-100">
+            <h1 class="position-absolute x start-50 top-50 d-flex justify-content-center translate-middle
+             p-5 rounded-pill">
+                <span class=" font"> Enter the game!  <p> Wraz ze sklepem Davi</p> </span>
+            </h1>
+        </div>
+        <div class="row product-row position-relative w-100">
+            <div class="col-12 h-100 d-flex flex-nowrap overflow-scroll no-scroll" id="third-div">
+                {% for item in most_expensive_products %}
+                    <div class="col-12 col-md-6 col-lg-3 d-flex p-2 flex-column gx-5 product-col">
+                        <div class="h-50 overlay position-relative">
+                            <img src="{{ item.image.url }}" class="w-100 h-100 img-fluid rounded">
+                                <div class="position-absolute bottom-0 h-25 w-100 mask">
+                                    {% if request.user.is_authenticated %}
+                                    {% if item.id in ids %}
+                                        <a class="justify-content-center
+                                        align-items-center d-flex flex-fill h-100 cart-nav delete-from-favorite-list"
+                                        data-product="{{ item.id }}">
+                                            <i class="bi bi-heart-fill" style="color: red;"> </i>
+                                        </a>
+                                    {% else %}
+                                        <a class="justify-content-center
+                                        align-items-center d-flex flex-fill h-100 cart-nav add-to-favorite-list"
+                                        data-product="{{ item.id }}">
+                                            <i class="bi gaming bi-heart-fill"> </i>
+                                        </a>
+                                    {% endif %}
+                                    {% endif %}
+                                <a href="{% url 'product_url' item.id %}"
+                                class="justify-content-center
+                                align-items-center d-flex flex-fill h-100 cart-nav">
+                                    <i class="gaming bi bi-zoom-in"> </i>
+                                </a>
+                                <a class="justify-content-center
+                                align-items-center d-flex flex-fill h-100 cart-nav cart-add"
+                                data-pack="{{ item.id }}">
+                                    <i class="gaming bi bi-cart-plus"> </i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="h-50">
+                            <div class="description d-flex justify-content-center p-1 align-items-center">
+                                <h4 class="text-align-center"> {{ item.title }} </h4>
+                            </div>
+                            <div class="p-0 description p-1 d-flex align-items-center justify-content-center ">
+                                {{ item.price|currency }}
+                            </div>
+                            <div class="add-cart-div d-flex flex-lg-row flex-column align-items-center justify-content-center">
+                                <div class="col-12 h-100 align-self-end">
+                                    <button class="justify-content-center cart-button
+                                    align-items-center d-flex w-100 h-100 cart-add"
+                                    data-pack="{{ item.id }}">
+                                        Dodaj do koszyka
+                                        &nbsp <i class="bi bi-cart-plus"> </i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="col-2 h-100 end-0 position-absolute d-flex justify-content-center align-items-center">
+                <h1 class="d-flex justify-content-center" onclick="scrollForward('third-div')"> <i class="bi bi-chevron-double-right font arrow" id="first">
+                </i> </h1>
+            </div>
+            <div class="col-2 h-100 start-0 position-absolute d-flex justify-content-center align-items-center">
+                <h1 class="d-flex justify-content-center" onclick="scrollBackward('third-div')"> <i class="bi bi-chevron-double-left font arrow" id="first">
+                </i> </h1>
+            </div>
+        </div>
+    </section>
+    {% include 'Shop/footer.html' %}
+    {% include 'Shop/javascripts.html' %}
+    <script>
+    $('.cart-add').on('click', function() {
+    var data = this.dataset.pack
+    $.ajax({
+    type: 'POST',
+    url: '{% url "add_to_cart_url" %}',
+    data: {'csrfmiddlewaretoken': "{{ csrf_token }}", 'add_item': data || ''}
+    }).done(function(response) {
+    window.location.reload()
+    })
+    })
+
+    $('.add-to-favorite-list').on('click', function() {
+    var data = this.dataset.product
+    $.ajax({
+    type: 'POST',
+    url: '{% url "add_to_favorite_list_url" %}',
+    data: {'csrfmiddlewaretoken': '{{ csrf_token }}', 'add_item': data, 'user_id': {{ request.user.id }} || ''}
+    }).done(function(response) {
+    window.location.reload()
+    })
+    })
+
+    $('.delete-from-favorite-list').on('click', function() {
+    var data = this.dataset.product
+    $.ajax({
+    type: 'POST',
+    url: '{% url "delete_from_favorite_list_url" %}',
+    data: {'csrfmiddlewaretoken': '{{ csrf_token }}', 'delete_item': data, 'user_id': {{ request.user.id }} || ''}
+    }).done(function(response) {
+    window.location.reload()
+    })
+    })
+
+    function scrollForward(element) {
+    document.getElementById(element).scrollBy(window.screen.width,0);
+    }
+
+    function scrollBackward(element) {
+    document.getElementById(element).scrollBy(-window.screen.width,0);
+    }
+    </script>
+</body>
+</html>

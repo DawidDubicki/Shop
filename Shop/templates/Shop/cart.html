@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{% load my_tags %}
+ {% include 'Shop/bootstrap.html' %}
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'cart.css' %}">
+ {% csrf_token %}
+    <meta charset="UTF-8">
+    <title> Koszyk </title>
+</head>
+<body>
+  {% include 'Shop/navbar.html' %}
+  {% if items %}
+<div class="row w-100 cart-row">
+<div class="col-md-9 col-12 overflow-scroll">
+<div class="row">
+    <div class="col-md-4 d-flex justify-content-center align-items-center">
+        Nazwa
+    </div>
+    <div class="col-md-2 d-flex justify-content-center align-items-center">
+        Cena
+    </div>
+    <div class="col-md-2 d-flex justify-content-center align-items-center">
+        Ilość
+    </div>
+    <div class="col-md-1 d-flex justify-content-center align-items-center">
+        Dodaj
+    </div>
+    <div class="col-md-1 d-flex justify-content-center align-items-center">
+        Odejmij
+    </div>
+    <div class="col-md-2 d-flex justify-content-center align-items-center">
+        Usuń
+    </div>
+    </div>
+{% for item, quantity in items.items %}
+        <div class="row cart-col">
+        <div class="col-md-4 d-flex justify-content-center align-items-center">
+            <a href="{% url 'product_url' item.id %}">{{ item.title }}</a>
+        </div>
+        <div class="col-md-2 d-flex justify-content-center align-items-center">
+            {{ item.price|currency }}
+        </div>
+        <div class="col-md-2 d-flex justify-content-center align-items-center">
+            <ZZZ> {{ quantity }} </ZZZ>
+        </div>
+        <div class="col-md-1 d-flex justify-content-center align-items-center">
+            <a class="bi bi-plus-circle-fill cart-add" data-pack="{{ item.id }}"></a>
+        </div>
+        <div class="col-md-1 d-flex justify-content-center align-items-center">
+            <a class="bi bi-dash-circle-fill cart-remove" data-pack="{{ item.id }}"></a>
+        </div>
+        <div class="col-md-2 d-flex justify-content-center align-items-center">
+            <a class="bi bi-x-circle-fill cart-delete" data-pack="{{ item.id }}"></a>
+        </div>
+    </div>
+{% endfor %}
+    </div>
+      <div class="col-md-3 col-12 d-fixed total-row">
+        <div class="h-50 d-flex align-items-center justify-content-center"> Łącznie: {{ total|currency }} </div>
+          <div class="h-50 w-100 d-flex flex-column">
+          {% if user.is_authenticated %}
+            <script src="https://www.paypal.com/sdk/js?client-id=AR2Z0FBZWIjTwAOoZesNYdqXjX1SKLvbun_vn7wId5yVrGVs15aACTnAj80CeFOfzj56YSOeu4nSDpbf&currency=PLN"></script>
+    <!-- Set up a container element for the button -->
+    <div id="paypal-button-container"></div>
+    <script>
+      paypal.Buttons({
+        // Sets up the transaction when a payment button is clicked
+        createOrder: (data, actions) => {
+          return actions.order.create({
+            purchase_units: [{
+              amount: {
+                value: '{{total}}' // Can also reference a variable or function
+              }
+            }]
+          });
+        },
+        // Finalize the transaction after payer approval
+        onApprove: (data, actions) => {
+          return actions.order.capture().then(function(orderData) {
+            // Successful capture! For dev/demo purposes:
+            console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+            const transaction = orderData.purchase_units[0].payments.captures[0];
+            // When ready to go live, remove the alert and show a success message within this page. For example:
+            const element = document.getElementById('paypal-button-container');
+            element.innerHTML = '<h3>Thank you for your payment!</h3>';
+            // Or go to another URL:  actions.redirect('thank_you.html');
+          });
+        }
+      }).render('#paypal-button-container');
+    </script>
+          {% else %}
+          <h2 class="text-align-center">
+              Żeby dokonać transakcji należy się zalogować
+          </h2>
+          {% endif %}
+    </div>
+    </div>
+    </div>
+{% else %}
+  <div class="cart-row d-flex justify-content-center align-items-center">
+  <h2 class="d-flex justify-content-center align-items-center gaming font"> Brak przedmiotów w Twoim koszyku! </h2>
+  </div>
+{% endif %}
+
+  {% include 'Shop/footer.html' %}
+{% include 'Shop/javascripts.html' %}
+<script>
+    $('.cart-remove').on('click', function() {
+    var data = this.dataset.pack
+    $.ajax({
+    type: 'POST',
+    url: '{% url "remove_from_cart_url" %}',
+    data: {'csrfmiddlewaretoken': "{{ csrf_token }}", 'remove_item': data || ''}
+    }).done(function(response) {
+    window.location.reload()
+    })
+    })
+
+    $('.cart-add').on('click', function() {
+    var data = this.dataset.pack
+    $.ajax({
+    type: 'POST',
+    url: '{% url "add_to_cart_url" %}',
+    data: {'csrfmiddlewaretoken': "{{ csrf_token }}", 'add_item': data || ''}
+    }).done(function(response) {
+    window.location.reload()
+    })
+    })
+
+    $('.cart-delete').on('click', function() {
+    var data = this.dataset.pack
+    $.ajax({
+    type: 'POST',
+    url: '{% url "delete_from_cart_url" %}',
+    data: {'csrfmiddlewaretoken': "{{ csrf_token }}", 'delete_item': data || ''}
+    }).done(function(response) {
+    window.location.reload()
+    })
+    })
+</script>
+</body>
+</html>

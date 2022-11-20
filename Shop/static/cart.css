@@ -1,0 +1,15 @@
+.cart-row {
+height: 70vh;
+background-color: #282828;
+color: white;
+}
+.cart-col {
+border-top: solid 2px #3A3A3A;
+}
+a {
+ text-decoration: none;
+ color: white;
+}
+.total-row {
+background-color: #4A4A4A;
+}

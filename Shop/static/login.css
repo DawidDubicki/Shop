@@ -1,0 +1,45 @@
+.login-row {
+min-height: 100vh;
+}
+.login-bg {
+background-color: #4A4A4A;
+}
+.form-input-div {
+height: 50%;
+width: 75%;
+}
+input {
+width: 80%;
+color: black;
+min-height: 8vh;
+}
+.login-btn {
+background-color: #383838;
+border: 1px solid grey;
+color: white;
+width: 100%;
+min-height: 10vh;
+}
+.login-logo {
+height: 25vh;
+width: 100%;
+}
+.login-description {
+color: white;
+text-align: center;
+width: 80%;
+}
+.login-error {
+color: red;
+}
+.login-forget-password, .login-forget-password:hover {
+color: white;
+text-decoration: none;
+}
+.login-input {
+width: 100%;
+min-height: 8vh;
+}
+form {
+width: 100%;
+}

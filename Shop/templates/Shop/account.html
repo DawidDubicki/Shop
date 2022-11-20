@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{% include 'Shop/bootstrap.html' %}
+{% load static %}
+<link href="{% static 'account.css' %}" rel="stylesheet">
+    <meta charset="UTF-8">
+    <title>Konto</title>
+</head>
+<body>
+{% include 'Shop/navbar.html' %}
+{% if request.user.is_authenticated and access %}
+    <div class="row w-100 m-0 account-row justify-content-center">
+        <div class="col-12 col-md-6 account-col p-0">
+            <div class="col-12 account">
+                <div class="h-75 d-flex justify-content-center">
+                    <img src="{% static 'user.png' %}" class="account-img w-25">
+                </div>
+                <div class="h-25 d-flex justify-content-center align-items-center">
+                    <h3 class="font"> Witaj {{ user.username }}! </h3>
+                </div>
+            </div>
+            <div class="row m-0 col-12 account2">
+                <div class="col-4 d-flex flex-column p-0">
+                    <button class="account-button w-100 d-flex flex-fill justify-content-center align-items-center show-hide"
+                            value="show-hide-password-change">
+                        Zmień hasło
+                    </button>
+                    <button class="account-button w-100 d-flex flex-fill justify-content-center align-items-center show-hide"
+                            value="show-hide-email-change">
+                        Zmień email
+                    </button>
+                    <button class="account-button w-100 d-flex flex-fill justify-content-center align-items-center" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                      Usuń konto
+                    </button>
+                    <form action="{% url 'main_url' %}" method="POST" name="logout-form" class="flex-fill">
+                        {% csrf_token %}
+                    <button class="account-button d-flex justify-content-center flex-fill align-items-center h-100 w-100"
+                    value="True" type="submit" name="logout">
+                        Wyloguj się
+                    </button>
+                    </form>
+                </div>
+                <div class="col-8 p-0">
+                    <div class="h-100 w-100 show-hide-password-change">
+                        <form class="d-flex flex-column align-items-center h-100" id="password_change_form" method="POST">
+                            {% csrf_token %}
+                            <div class="flex-fill d-flex justify-content-center align-items-center">
+                                <h2 class="text-align-center"> Wprowadź nowe hasło </h2>
+                            </div>
+                            {% for field in change_password_form %}
+                                <div class="w-100 mt-5 d-flex justify-content-center">
+                                    {{ field }}
+                                </div>
+                            {% endfor %}
+                            <div class="d-flex flex-fill w-100">
+                                <button class="account-button w-100 align-self-end change_password"> Zmień hasło </button>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- 2nd form -->
+                    <div class="h-100 w-100 show-hide-email-change hidden">
+                        <form class="d-flex flex-column align-items-center h-100" id="email_change_form" method="POST">
+                            {% csrf_token %}
+                            <div class="flex-fill d-flex justify-content-center align-items-center">
+                                <h2 class="text-align-center"> Wprowadź nowy email </h2>
+                            </div>
+                            {% for field in change_email_form %}
+                                <div class="w-100 mt-5 d-flex justify-content-center">
+                                    {{ field }}
+                                </div>
+                            {% endfor %}
+                            <div class="d-flex flex-fill w-100">
+                                <button class="account-button w-100 align-self-end change_email"> Zmień email </button>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- 3rd form-->
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content bg-">
+                          <div class="modal-body account d-flex align-items-center">
+                              <h2 class="text-align-center"> Czy jesteś pewny że chcesz usunąć konto? </h2>
+                          </div>
+                          <div class="d-flex align-items-center justify-content-center p-5 account-delete-div">
+                              <form id="delete_account_form" method="POST">
+                                  {% csrf_token %}
+                              <button type="submit" class="btn-danger account-delete-button me-auto"> Tak, chcę usunąć konto </button>
+                              </form>
+                            <button type="button" class="btn-success account-delete-button" data-bs-dismiss="modal"> Nie, zabierz mnie stąd </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% else %}
+<h1 class="d-flex justify-content-center font vh-100 align-items-center"> Nie posiadasz dostępu </h1>
+{% endif %}
+{% include 'Shop/footer.html' %}
+{% include 'Shop/javascripts.html' %}
+<script>
+
+$(document).ready(function(){
+    $('.show-hide').click(function() {
+        $('.show-hide-password-change').hide();
+        $('.show-hide-email-change').hide();
+        $('.' + $(this).val()).show();
+    })
+})
+$('#password_change_form').submit(function() {
+    $.ajax({
+    type: 'POST',
+    url: '{% url "change_password_url" %}',
+    data: $(this).serialize() || '',
+    }).done(function(response) {
+    window.location.reload()
+    })
+})
+
+$('#email_change_form').submit(function() {
+    $.ajax({
+    type: 'POST',
+    url: '{% url "change_email_url" %}',
+    data: $(this).serialize() || '',
+    }).done(function(response) {
+    window.location.reload()
+    })
+})
+
+$('#delete_account_form').submit(function() {
+    $.ajax({
+    type: 'POST',
+    url: '{% url "delete_account_url" %}',
+    data: {'csrfmiddlewaretoken': '{{ csrf_token }}'  || ''},
+    }).done(function(response) {
+    alert(response);
+    })
+})
+</script>
+</body>
+</html>

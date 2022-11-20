@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% include 'Shop/bootstrap.html' %}
+    <title>Logowanie</title>
+    {% load static %}
+<link href="{% static 'login.css' %}" rel="stylesheet">
+</head>
+<body>
+  {% include 'Shop/navbar.html' %}
+<div class="row w-100 m-0 login-row align-items-center justify-content-center">
+    <div class="col-12 col-md-6 d-flex justify-content-center align-items-center login-bg flex-column p-0">
+        <div class="login-logo d-flex justify-content-center">
+            <img src="{% static 'Davi_Logo_final1.png' %}" class="h-100 w-50">
+        </div>
+        <h3 class="login-description d-flex justify-content-center align-items-center m-0">
+            Wprowadź nazwę użytkownika oraz hasło żeby się zalogować
+        </h3>
+    <form method="POST" class="d-flex align-items-center flex-column">
+        {% csrf_token %}
+        {% for field in form %}
+        <div class="login-input mt-5 d-flex justify-content-center">
+            {{ field }}
+        </div>
+        {% for error in field.errors %}
+        <h5 class="d-flex justify-content-center login-error mt-1">
+                {{ error }}
+        </h5>
+        {% endfor %}
+
+        {% endfor %}
+        <a target='_blank' href="{% url 'reset_password_url' %}" class="d-flex justify-content-start align-self-center align-items-center login-forget-password mt-1">
+            Nie pamiętam hasła </a>
+        <button type="submit" class="login-btn align-self-center border rounded mt-5">
+            Zaloguj się
+        </button>
+    </form>
+    </div>
+</div>
+{% include 'Shop/footer.html' %}
+{% include 'Shop/javascripts.html' %}
+</body>
+</html>

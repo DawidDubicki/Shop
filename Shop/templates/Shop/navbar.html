@@ -1,0 +1,102 @@
+
+{% load my_tags %}
+{% load static %}
+<nav class="row mb-3 w-100 m-0">
+    <div class="col-4 col-md-2 d-flex align-items-center">
+        <a class="w-100 d-flex gaming-border justify-content-center align-items-center" href="{% url 'main_url' %}">
+            <img src="{% static 'Davi_Logo_final1.png' %}" class="nav-button">
+        </a>
+    </div>
+    <div class="col-8 col-md-10 d-flex">
+    <div class="col-5 d-none d-md-flex ms-md-auto me-md-auto align-items-center">
+        <form method="GET" action="{% url 'search_view_url' %}" class="w-100 d-flex border border-secondary rounded-pill h-75 align-items-center">
+        <input name='search' class="border-end border-secondary w-75 h-100 gaming font" type="search" placeholder="Wyszukaj produkt" aria-label="Search">
+        <button class="btn w-25 d-flex align-items-center justify-content-center" type="submit">
+        <i class="gaming bi bi-search"></i>
+        </button>
+        </form>
+    </div>
+    <div class="col-3 col-md-2 d-md-none d-flex align-items-center justify-content-center">
+<!-- Button trigger modal -->
+<button type="button" class="btn w-25 d-flex align-items-center justify-content-center" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+  <i class="gaming bi bi-search"></i>
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+                <form method="POST" class="w-100 d-flex border border-secondary rounded-pill h-75  align-items-center">
+            {% csrf_token %}
+        <input name='search' class="border-end border-secondary w-75 h-100 gaming font" type="search" placeholder="Wyszukaj produkt" aria-label="Search">
+        <button class="btn w-25 d-flex align-items-center justify-content-center" type="submit">
+        <i class="gaming bi bi-search"></i>
+        </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+    </div>
+    <div class="col-3 col-md-2 d-flex ms-md-auto me-md-auto align-items-center">
+    <a class="w-100 h-75 gaming-border  d-flex align-items-center justify-content-center"
+       href="{% url 'cart_url' %}">
+        <i class="gaming bi bi-cart2"></i> <span class="rounded-circle gaming rounded">
+            &nbsp; {{ request.session.cart|length }}
+        </span>
+    </a>
+    </div>
+    <div class="col-3 col-md-2 ms-md-auto me-md-auto d-flex align-items-center">
+    <a class="w-100 h-75  d-flex align-items-center justify-content-center dropdown-toggle"
+         role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+           <i class="bi gaming bi-heart-fill"></i>
+        </a>
+        <div class="dropdown-menu col-9 col-md-4 no-scroll favoritelist-div" aria-labelledby="dropdownMenuLink">
+            {% if favorite_list %}
+            {% for item in favorite_list %}
+            <div class="col-12 d-flex flex-wrap border-bottom border-secondary align-items-center">
+            <div class="col-6 p-1"> <a href="{% url 'product_url' item.item.id %}"> <span class="gaming font">
+                {{ item.item.title }} </span>
+            </a> </div>
+            <div class="col-6 p-1"> <span class="gaming font">{{ item.item.price|currency }}</span> </div>
+            </div>
+            {% endfor %}
+                {% else %}
+            {% if user.is_authenticated %}
+                <span class="font d-flex justify-content-center"> Brak ulubionych </span>
+            {% else %}
+                <span class="font d-flex justify-content-center">
+                    Należy się zalogować </span>
+            {% endif %}
+            {% endif %}
+        </div>
+    </a>
+    </div>
+    <div class="col-3 col-md-2 ms-md-auto me-md-auto d-flex justify-content-center align-items-center">
+    <a class="dropdown-toggle gaming-border d-flex align-items-center justify-content-center h-75 w-100"
+       href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    {% if request.user.is_authenticated %}
+        <i class="gaming bi bi-person-check-fill"> </i>
+    {% else %}
+        <i class="gaming bi bi-person-fill"> </i>
+    {% endif %}
+    </a>
+        <div class="dropdown-menu col-9 col-md-3" aria-labelledby="dropdownMenuLink">
+            {% if request.user.is_authenticated %}
+                <a class="dropdown-item font gaming" href="{% url 'account_url' request.user.username %}"> Konto </a>
+            <form action="{% url 'main_url' %}" method="POST" name="logout-form">
+                {% csrf_token %}
+                <button class="dropdown-item font gaming" value="True" type="submit" name="logout"> Wyloguj się </button>
+            </form>
+            {% else %}
+            <a class="dropdown-item gaming font" href="{% url 'register_url' %}">Rejestracja</a>
+            <a class="dropdown-item gaming font" href="{% url 'login_url' %}">Zaloguj się</a>
+            {% endif %}
+        </div>
+        </div>
+    </div>
+</nav>

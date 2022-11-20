@@ -1,0 +1,44 @@
+
+.bi {
+font-size: 150%;
+}
+section {
+background-color: #282828;
+}
+.btn:hover {
+color: #282828;
+}
+
+.cart-button {
+background-color: #383838;
+border: 1px solid grey;
+color: white;
+}
+.cart-nav {
+background-color: rgba(74,74,74,0.6);
+color: white;
+}
+.product-row {
+min-height: 60vh;
+}
+.arrow {
+pointer-events: none;
+-webkit-box-shadow: inset -10vw 0px 66px -65px rgba(40, 40, 40, 1);
+-moz-box-shadow: inset -10vw 0px 66px -65px rgba(40, 40, 40, 1);
+box-shadow: inset -10vw 0px 66px -65px rgba(40, 40, 40, 1);
+}
+.product-badge {
+height: 15%;
+}
+.product-col {
+height: 90vh;
+}
+.borders {
+border-left: solid 1px #0C0032;
+border-right: solid 1px #0C0032;
+background-color: #0C0032;
+}
+input {
+color: white;
+}
+
